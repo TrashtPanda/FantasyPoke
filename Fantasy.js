@@ -7,56 +7,46 @@ function enemyStatsGen(min, max, count) {
   }
   const enemyStats = enemyStatsGen
   
-  // Main character Stats and stats display 
-  const mainChar = {
-    name: "Lindor",
-    age: 21,
-    "Characterstats": {
-      health : 100,
-      strength : enemyStatsGen(50,75,1)
-    }
-  }
-  for(let stats in mainChar) {
-   if(typeof mainChar[stats] === "object") {
-     console.log(`${stats}: `)
-     for(let nestedStats in mainChar[stats]) {
-       console.log(`${nestedStats} : ${mainChar[stats][nestedStats]}`)
-     }
-   } else {console.log(`${stats}: ${mainChar[stats]}`)}
-  } 
+  // character stats creator  
   
-  //Enemy Generator and random selector  
-  class enemyGenBot {
+  class playerCreator {
     constructor(name, health, strength) {
       this.name = name;
       this.health = health;
       this.strength = strength;
-    }
+    }}
+  
+  
+  // Main character Stats and stats display
+  
+  const mainChar = new playerCreator("Linkussy", 100, enemyStatsGen(50,75,1))
 
-    initTrain(){
-      this.strength += 5;
-    }
+  console.log('These are your stats')
+ const logMainCharStats = [{
+  name: mainChar.name,
+  strength: mainChar.strength,
+  health: mainChar.health
+ }]
 
-    
-  }
+ printTable(logMainCharStats)
+ 
+  //Enemy Generator and random selector  
+  
 
 
 const Enemies = ["Goblin", "Elf", "Dragon"];
 const enemyChosen = Math.floor(Math.random() * Enemies.length);
-const newEnemy = new enemyGenBot(Enemies[enemyChosen], 100, enemyStatsGen(50,100,1));
+const newEnemy = new playerCreator(Enemies[enemyChosen], 100, enemyStatsGen(50,100,1));
   
   //Enemy Stats Display 
   console.log("A new enemy has appeared!")
-  const logStats =[{
+  const logEnStats =[{
     name: newEnemy.name,
     strength: newEnemy.strength,
     health: newEnemy.health,
   }]
-  printTable(logStats);
-  for(let enStats in newEnemy) {
-    console.log(enStats);
-    console.log(`${enStats}: ${newEnemy[enStats]}`)
-  }
+  printTable(logEnStats);
+  
 
  //Player Choices and choice interface
   const readline = require('readline');
@@ -73,8 +63,7 @@ function gameLoop(playerHealth, botHealth){
   //Enemy Choices Logic 
   const enChoices = ["Attack","Block","Train"];
   const botLogic =  Math.floor(Math.random() * enChoices.length);
-  const botChoice = "Train"
-  // enChoices[botLogic]
+  const botChoice = "Block"
   
 
   playerChoiceInt.question("Pick a move: ", (answer) => {
@@ -86,17 +75,17 @@ function gameLoop(playerHealth, botHealth){
 
   //Option logic
   // Both bot and player pick Attack
-  if (answer === "Attack" && botChoice === "Attack" && mainChar["Characterstats"].strength > newEnemy.strength) {
-    newEnemy.health -= (mainChar["Characterstats"].strength - newEnemy.strength);
+  if (answer === "Attack" && botChoice === "Attack" && mainChar.strength > newEnemy.strength) {
+    newEnemy.health -= (mainChar.strength - newEnemy.strength);
   console.log(`Enemy health after attack: ${newEnemy.health}`);
-  }else if(answer === "Attack" && botChoice === "Attack" && mainChar["Characterstats"].strength < newEnemy.strength) {
-    mainChar["Characterstats"].health -= (newEnemy.strength - mainChar["Characterstats"].strength);
-    console.log(`The ${newEnemy.name} is stronger. You lost health. Your health is now ${mainChar["Characterstats"].health}`)
+  }else if(answer === "Attack" && botChoice === "Attack" && mainChar.strength < newEnemy.strength) {
+    mainChar.health -= (newEnemy.strength - mainChar.strength);
+    console.log(`The ${newEnemy.name} is stronger. You lost health. Your health is now ${mainChar.health}`)
   }
   // If either choses to Block
   else if(answer === "Attack" && botChoice === "Block") {
-    mainChar["Characterstats"].strength -= 5;
-    console.log(`The ${newEnemy.name} has blocked your attack you lose 5 strength. Your strength is now at ${mainChar["Characterstats"].strength}`)
+    mainChar.strength -= 5;
+    console.log(`The ${newEnemy.name} has blocked your attack you lose 5 strength. Your strength is now at ${mainChar.strength}`)
   }else if (answer === "Block" && botChoice === "Attack") {newEnemy.strength -= 5;
   console.log(`You Blocked the ${newEnemy.name}'s attack. They have lost 5 strength. The ${newEnemy.name}'s strength is at ${newEnemy.strength}`)
 }
@@ -106,34 +95,32 @@ function gameLoop(playerHealth, botHealth){
  }
  //If player chooses Train
  if(answer === "Train" && botChoice !== "Attack") {
-  console.log("triggered")
-  mainChar["Characterstats"].strength += 5;
-  console.log(mainChar)
-  console.log(`You trained your strength. Your strength is now at ${mainChar['Characterstats'].strength}`)
+  mainChar.strength += 5;
+  console.log(`You trained your strength. Your strength is now at ${mainChar.strength}`)
  } else if(answer === "Train" && botChoice === "Attack") {
-  mainChar["Characterstats"].health = (mainChar["Characterstats"].health - newEnemy.strength)
-  console.log(`The ${newEnemy.name} attacked you while you were training. You took the full attack. Your health is now ${mainChar["Characterstats"].health}`)
+  mainChar.health = (mainChar.health - newEnemy.strength)
+  console.log(`The ${newEnemy.name} attacked you while you were training. You took the full attack. Your health is now ${mainChar.health}`)
  }
  //If Bot choses Train
  else if(botChoice === "Train" && answer !== "Attack") {
   newEnemy.strength += 5;
   console.log(`The ${newEnemy.name} chose to train. It gained 5 strengh. It now has ${newEnemy.strength}`)
  } else if(botChoice === "Train" && answer === "Attack") {
-  newEnemy.health = (newEnemy.health - mainChar["Characterstats"].strength)
+  newEnemy.health = (newEnemy.health - mainChar.strength)
   console.log(`You got a direct hit while the ${newEnemy.name} was training. Its health is now ${newEnemy.health}`)
  }
  // recursive call back to allow for more than one player input 
  gameLoop(playerHealth, botHealth);
  
  //Gameover check 
- if(mainChar["Characterstats"].health <= 0 || newEnemy.health <= 0) {
+ if(mainChar.health <= 0 || newEnemy.health <= 0) {
   console.log("Game Over! Thanks for playing!")
   playerChoiceInt.close();
  }
   
 })
 }
-gameLoop(mainChar["Characterstats"].health, newEnemy.health);
+gameLoop(mainChar.health, newEnemy.health);
 
 
 
