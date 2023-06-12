@@ -28,12 +28,8 @@ function enemyStatsGen(min, max, count) {
   health: mainChar.health
  }]
 
- printTable(logMainCharStats)
- 
-  //Enemy Generator and random selector  
+ printTable(logMainCharStats) 
   
-
-
 const Enemies = ["Goblin", "Elf", "Dragon"];
 const enemyChosen = Math.floor(Math.random() * Enemies.length);
 const newEnemy = new playerCreator(Enemies[enemyChosen], 100, enemyStatsGen(50,100,1));
@@ -63,7 +59,7 @@ function gameLoop(playerHealth, botHealth){
   //Enemy Choices Logic 
   const enChoices = ["Attack","Block","Train"];
   const botLogic =  Math.floor(Math.random() * enChoices.length);
-  const botChoice = "Block"
+  const botChoice = enChoices[botLogic]
   
 
   playerChoiceInt.question("Pick a move: ", (answer) => {
@@ -87,16 +83,16 @@ function gameLoop(playerHealth, botHealth){
     mainChar.strength -= 5;
     console.log(`The ${newEnemy.name} has blocked your attack you lose 5 strength. Your strength is now at ${mainChar.strength}`)
   }else if (answer === "Block" && botChoice === "Attack") {newEnemy.strength -= 5;
-  console.log(`You Blocked the ${newEnemy.name}'s attack. They have lost 5 strength. The ${newEnemy.name}'s strength is at ${newEnemy.strength}`)
+  console.log(`You Blocked the ${newEnemy.name}'s attack. They have lost 5 strength. The ${newEnemy.name}'s strength is at ${newEnemy.strength}`);
 }
  // If both choose Block 
  else if(answer === "Block" && botChoice === "Block") {
-  console.log("Both players chose to block. Nothing happens")
+  console.log("Both players chose to block. Nothing happens");
  }
  //If player chooses Train
  if(answer === "Train" && botChoice !== "Attack") {
   mainChar.strength += 5;
-  console.log(`You trained your strength. Your strength is now at ${mainChar.strength}`)
+  console.log(`You trained your strength. Your strength is now at ${mainChar.strength}`);
  } else if(answer === "Train" && botChoice === "Attack") {
   mainChar.health = (mainChar.health - newEnemy.strength)
   console.log(`The ${newEnemy.name} attacked you while you were training. You took the full attack. Your health is now ${mainChar.health}`)
