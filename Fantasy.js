@@ -5,7 +5,6 @@ function enemyStatsGen(min, max, count) {
 
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-  const enemyStats = enemyStatsGen
   
   // character stats creator  
   
